@@ -1,0 +1,3 @@
+# Ignore files 
+src/Robot/.env
+/nbproject/private/
