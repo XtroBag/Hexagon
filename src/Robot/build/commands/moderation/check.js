@@ -4,17 +4,17 @@ const {
   CommandInteraction,
   Client,
 } = require("discord.js");
-const Guild = require("../../database/Schemas/Guilds");
+const Punishment = require("../../database/Schemas/Punishments");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("check")
-    .setDescription("🔎 Check a member for punishments or information")
+    .setDescription("🔎 Check a member for punishments")
     .addUserOption((option) =>
       option
         .setName("user")
         .setDescription("pick the user to search")
-        .setRequired(false)
+        .setRequired(true)
     ),
   /**
    * @param {Client} client
@@ -23,33 +23,36 @@ module.exports = {
   async run(client, interaction) {
     const user = interaction.options.getUser("user");
 
-    if (!user) {
-    Guild.findOne({ GuildID: interaction.guild.id }, async (err, data) =>  {
-      if (data) {
-        interaction.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setTitle("Punishment check")
-              .setColor("#2F3136")
-              .setDescription(
-                data.Punishments.map(
-                  (w, i) =>
-                    `\`\`${i + 1}\`\` - **${w.user}**\nID: ${w.id}\nType: ${w.type}\nReason: ${w.reason}`
-                ).join("\n")
-              ),
-          ],
-        });
+    Punishment.findOne(
+      { GuildID: interaction.guild.id, UserID: user.id, UserTag: user.tag },
+      async (err, data) => {
+        if (err) throw err;
+        if (data) {
+          interaction.reply({
+            embeds: [
+              new EmbedBuilder()
+                .setTitle("Punishment check")
+                .setColor("#2F3136")
+                .setDescription(
+                  data.Content.map(
+                    (w, i) =>
+                      `\`\`${i + 1}\`\` ➜ **${
+                        w.MemberName
+                      }**\n<:name:1021980520499912754> ID: ${
+                        w.MemberID
+                      }\n<:user:1021980809713946674> Moderator: ${
+                        w.Moderator
+                      }\n<:reason:1021980966673186826> Reason: ${
+                        w.Reason || "No reason specified"
+                      }\n<:time:1021981286669230130> Date: <t:${w.Date}:R>`
+                  ).join("\n\n")
+                ),
+            ],
+          });
+        } else {
+          interaction.reply({ content: "they have no punishments on record" });
+        }
       }
-    });
-
-    } else {
-
-    }
-
-
-   const punishments = Guild.findOne({ GuildID: interaction.guild.id}, async (err, data) => {
-
-    })
-
+    );
   },
 };

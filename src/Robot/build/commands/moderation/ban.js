@@ -5,7 +5,7 @@ const {
   EmbedBuilder,
   PermissionsBitField,
 } = require("discord.js");
-const Guild = require("../../database/Schemas/Guilds");
+const Punishment = require("../../database/Schemas/Punishments");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -22,9 +22,7 @@ module.exports = {
             .setRequired(true)
         )
         .addStringOption((option) =>
-          option
-          .setName("reason")
-          .setDescription("The reason to ban this user")
+          option.setName("reason").setDescription("The reason to ban this user")
         )
     )
     .addSubcommand((subcommand) =>
@@ -45,7 +43,9 @@ module.exports = {
   async run(client, interaction) {
     const sub = interaction.options.getSubcommand();
     const user = interaction.options.getUser("user");
-    const reason = interaction.options.getString("reason");
+    const reason = interaction.options.getString(
+      "reason" || "No reason specified"
+    );
 
     const { guild } = interaction;
 
@@ -66,55 +66,48 @@ module.exports = {
         return interaction.reply({ content: "You cannot use this command" });
       }
 
-      const banEmbed = new EmbedBuilder()
-        .setTitle("Member Banned")
-        .setDescription(
-          `
-             **${user.tag} was banned!**
-             Reason: ${reason || "No reason provided"}
-             `
-        )
-        .setTimestamp();
-      /*
-      interaction.reply({ embeds: [banEmbed] }).then(() => {
-        guild.members.ban(user, { reason: reason });
-      });
-*/
-
-      // get the time for the datebase timestamp
-      var dt = new Date();
-      var h = dt.getHours(),
-        m = dt.getMinutes();
-      var time;
-      if (h == 12) {
-        time = h + ":" + m + " PM";
-      } else {
-        time = h > 12 ? h - 12 + ":" + m + " PM" : h + ":" + m + " AM";
-      }
-
-      // get the date for the database timestamp
-      let date = new Date();
-      let day = date.getDate();
-      let month = date.getMonth() + 1;
-      let year = date.getFullYear();
-
-      await Guild.findOneAndUpdate(
-        {
-          GuildID: interaction.guild.id,
-        },
-        {
-          $push: {
-            Punishments: {
-              user: user.tag,
-              id: user.id,
-              type: "Ban",
-              reason: reason || "No reason provided",
-              time: time,
-              date: `${day}/${month}/${year}`,
-            },
-          },
+      Punishment.findOne(
+        { GuildID: interaction.guild.id, UserID: user.id, UserTag: user.tag },
+        async (err, data) => {
+          if (err) throw err;
+          if (!data) {
+            data = new Punishment({
+              GuildID: interaction.guild.id,
+              UserID: user.id,
+              UserTag: user.tag,
+              Content: [
+                {
+                  MemberID: user.id,
+                  MemberName: user.tag,
+                  Moderator: interaction.user.username,
+                  Reason: reason || "No reason specified",
+                  Date: `${parseInt(interaction.createdTimestamp / 1000)}`,
+                },
+              ],
+            });
+          } else {
+            const obj = {
+              MemberID: user.id,
+              MemberName: user.tag,
+              Moderator: interaction.user.username,
+              Reason: reason || "No reason specified",
+              Date: `${parseInt(interaction.createdTimestamp / 1000)}`,
+            };
+            data.Content.push(obj);
+          }
+          data.save();
         }
       );
+
+      const BanEmbed = new EmbedBuilder()
+        .setTitle("Member banned")
+        .setDescription(
+          `Banned: ${user.id}\n Reason: ${reason || "No reason specified"}`
+        );
+
+      interaction.reply({ embeds: [BanEmbed] }).then(() => {
+        guild.members.ban(user, { reason: reason });
+      });
     } else if (sub === "remove") {
     }
   },

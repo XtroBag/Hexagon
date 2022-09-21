@@ -5,8 +5,7 @@ const Schema = new mongo.Schema({
     GuildID: String,
     OwnerID: String,
     JoinDate: String,
-    Punishments: [ Object ],
-    Settings: [ Array ]
+    Settings: Array
 })
 
-module.exports = mongo.model('Information', Schema);
+module.exports = mongo.model('Guilds', Schema);
