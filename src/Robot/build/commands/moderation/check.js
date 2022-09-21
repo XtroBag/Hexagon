@@ -38,12 +38,14 @@ module.exports = {
                     (w, i) =>
                       `\`\`${i + 1}\`\` ➜ **${
                         w.MemberName
-                      }**\n<:name:1021980520499912754> ID: ${
+                      }**\n<:idbadge:1021989396322463815> ID: ${
                         w.MemberID
                       }\n<:user:1021980809713946674> Moderator: ${
                         w.Moderator
                       }\n<:reason:1021980966673186826> Reason: ${
                         w.Reason || "No reason specified"
+                      }\n Action: ${
+                        w.Action
                       }\n<:time:1021981286669230130> Date: <t:${w.Date}:R>`
                   ).join("\n\n")
                 ),

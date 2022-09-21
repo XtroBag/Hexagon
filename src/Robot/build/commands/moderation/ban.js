@@ -42,10 +42,8 @@ module.exports = {
    */
   async run(client, interaction) {
     const sub = interaction.options.getSubcommand();
-    const user = interaction.options.getUser("user");
-    const reason = interaction.options.getString(
-      "reason" || "No reason specified"
-    );
+    const user = interaction.options.getUser('user');
+    const reason = interaction.options.getString("reason") ?? "No reason specified";
 
     const { guild } = interaction;
 
@@ -66,6 +64,16 @@ module.exports = {
         return interaction.reply({ content: "You cannot use this command" });
       }
 
+      if (
+        interaction.guild.members.me.permissions.has(
+          PermissionFlagsBits.BanMembers
+        )
+      ) {
+        return interaction.reply({
+          content: "I do not have permissions to ban this user",
+        });
+      }
+
       Punishment.findOne(
         { GuildID: interaction.guild.id, UserID: user.id, UserTag: user.tag },
         async (err, data) => {
@@ -81,6 +89,7 @@ module.exports = {
                   MemberName: user.tag,
                   Moderator: interaction.user.username,
                   Reason: reason || "No reason specified",
+                  Action: "Ban",
                   Date: `${parseInt(interaction.createdTimestamp / 1000)}`,
                 },
               ],
@@ -91,6 +100,7 @@ module.exports = {
               MemberName: user.tag,
               Moderator: interaction.user.username,
               Reason: reason || "No reason specified",
+              Action: "Ban",
               Date: `${parseInt(interaction.createdTimestamp / 1000)}`,
             };
             data.Content.push(obj);
