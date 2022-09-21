@@ -4,7 +4,7 @@
   "description": "hexagon is a project that is created by Xtrobag",
   "main": "bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node bot.js"
   },
   "author": "Xtrobag",
   "license": "ISC",

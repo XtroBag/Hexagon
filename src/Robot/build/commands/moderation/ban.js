@@ -10,29 +10,31 @@ const Guild = require("../../database/Schemas/Guilds");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("ban")
-    .setDescription("Use this command to remove users from your guild")
+    .setDescription("Remove users from your guild that cause problems")
     .addSubcommand((subcommand) =>
       subcommand
         .setName("add")
-        .setDescription("Info about a user")
+        .setDescription("🔨 Ban a user from your server")
         .addUserOption((option) =>
           option
             .setName("user")
-            .setDescription("ban a user from the server")
+            .setDescription("The user to ban from the server [ID/USER]")
             .setRequired(true)
         )
         .addStringOption((option) =>
-          option.setName("reason").setDescription("the reason to ban this user")
+          option
+          .setName("reason")
+          .setDescription("The reason to ban this user")
         )
     )
     .addSubcommand((subcommand) =>
       subcommand
         .setName("remove")
-        .setDescription("Remove a ban from your server")
+        .setDescription("🔨 Unban a user from your server")
         .addUserOption((option) =>
           option
             .setName("user")
-            .setDescription("unban a user from the server")
+            .setDescription("The user to unban from the server [ID/USER]")
             .setRequired(true)
         )
     ),

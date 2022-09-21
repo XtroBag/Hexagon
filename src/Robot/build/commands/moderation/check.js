@@ -9,7 +9,7 @@ const Guild = require("../../database/Schemas/Guilds");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("check")
-    .setDescription("check a member for punishments or information")
+    .setDescription("🔎 Check a member for punishments or information")
     .addUserOption((option) =>
       option
         .setName("user")
@@ -30,7 +30,7 @@ module.exports = {
           embeds: [
             new EmbedBuilder()
               .setTitle("Punishment check")
-              .setColor("Blurple")
+              .setColor("#2F3136")
               .setDescription(
                 data.Punishments.map(
                   (w, i) =>

@@ -3,7 +3,7 @@ const { SlashCommandBuilder, CommandInteraction, Client, PermissionFlagsBits, Em
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('clear')
-        .setDescription('clear messages from a channel')
+        .setDescription('📜 Clear messages from a channel')
         //.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
         .addIntegerOption(option =>
             option

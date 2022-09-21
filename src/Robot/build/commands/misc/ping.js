@@ -3,7 +3,7 @@ const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("ping")
-    .setDescription("Pong! Check my latency"),
+    .setDescription("🏓 Pong! Check my latency"),
   async run(client, interaction) {
     //Deferring the reply
     await interaction.deferReply();
