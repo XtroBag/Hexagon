@@ -28,7 +28,6 @@ module.exports = {
       async (err, data) => {
         if (err) throw err;
         if (data) {
-
           interaction.reply({
             embeds: [
               new EmbedBuilder()
