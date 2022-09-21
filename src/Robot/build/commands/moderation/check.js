@@ -28,33 +28,33 @@ module.exports = {
       async (err, data) => {
         if (err) throw err;
         if (data) {
+
           interaction.reply({
             embeds: [
               new EmbedBuilder()
                 .setTitle("Punishment check")
                 .setColor("#2F3136")
-                .setDescription(
-                  data.Content.map(
-                    (w, i) =>
-                      `\`\`${i + 1}\`\` ➜ **${
-                        w.MemberName
-                      }**\n<:idbadge:1021989396322463815> ID: ${
-                        w.MemberID
-                      }\n<:user:1021980809713946674> Moderator: ${
-                        w.Moderator
-                      }\n<:reason:1021980966673186826> Reason: ${
-                        w.Reason || "No reason specified"
-                      }\n Action: ${
-                        w.Action
-                      }\n<:time:1021981286669230130> Date: <t:${w.Date}:R>`
-                  ).join("\n\n")
+                .setDescription(`Checking all the punishments of the user ${user.username}`)
+                .addFields(data.Content.slice(0, 6).map((item, idx) => {
+                    return {
+                      name: `Incident ${idx + 1}`,
+                      value: [ `\`\`${item.MemberID}\`\``, `<:User:1022185112756035634> ${item.MemberName}`, `<:Moderator:1022184600044326983> ${item.Moderator}`, `<:Reason:1022185519876145172> ${item.Reason}`, `<:Action:1022185753364660275> ${item.Action}`, `<:Time:1022186083288633445> <t:${item.Date}:R>`].join('\n'),
+                      inline: true
+                    };
+                  })
                 ),
             ],
           });
         } else {
           interaction.reply({ content: "they have no punishments on record" });
         }
+
+        
       }
     );
   },
 };
+
+
+// maybe stop pages after is user has more then 24 punishments 
+// might need to make sure reason is under amount of characters like 20+ or so

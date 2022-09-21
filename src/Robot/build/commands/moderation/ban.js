@@ -4,6 +4,7 @@ const {
   Client,
   EmbedBuilder,
   PermissionsBitField,
+  PermissionFlagsBits
 } = require("discord.js");
 const Punishment = require("../../database/Schemas/Punishments");
 
@@ -65,7 +66,7 @@ module.exports = {
       }
 
       if (
-        interaction.guild.members.me.permissions.has(
+        !interaction.guild.members.me.permissions.has(
           PermissionFlagsBits.BanMembers
         )
       ) {
@@ -115,9 +116,10 @@ module.exports = {
           `Banned: ${user.id}\n Reason: ${reason || "No reason specified"}`
         );
 
-      interaction.reply({ embeds: [BanEmbed] }).then(() => {
-        guild.members.ban(user, { reason: reason });
-      });
+      interaction.reply({ embeds: [BanEmbed] })
+//      .then(() => {
+//        guild.members.ban(user, { reason: reason });
+//      });
     } else if (sub === "remove") {
     }
   },
