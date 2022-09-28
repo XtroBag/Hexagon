@@ -17,7 +17,7 @@ module.exports = async (client) => {
   const commandsArray = jsFilesPerFolder.map((files, i) =>
   files.map((file) => {
     const cmd =
-      require(`../../build/commands/${folders[i]}/${file}`); 
+      require(`../../build/commands/${folders[i]}/${file}`);
       client.slashCommands.set(cmd.data.toJSON().name, cmd);
     return cmd.data.toJSON();
   })

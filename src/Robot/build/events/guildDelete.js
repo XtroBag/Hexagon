@@ -4,7 +4,7 @@ const chalk = require("chalk");
 module.exports = {
     name: 'guildDelete',
     run(client) {
-       
-        
+
+
     }
 }

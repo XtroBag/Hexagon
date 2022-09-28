@@ -1,5 +1,4 @@
-const chalk = require("chalk")
-const moment = require("moment");
+const chalk = require("chalk");
 const { LoggerTypes } = require('../types/logger-types');
   
 module.exports = (type, msg) => {
@@ -8,8 +7,8 @@ module.exports = (type, msg) => {
      * @param {string} type - basically the first things in the [] before the log
      * @param {string} msg - the actual thing that is being logged
      */
-    const loggedType = type.toLocaleUpperCase()
-    if (!type) type = 'Null'
+    const loggedType = type.toLocaleUpperCase();
+    if (!type) type = 'Null';
     switch (type) {
         case LoggerTypes.LOAD: // [LOAD]
             return console.log(`[` + chalk.magenta(`${loggedType}`) + `]` + ' ' + chalk.white`${msg}`);
